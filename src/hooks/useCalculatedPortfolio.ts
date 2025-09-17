@@ -133,7 +133,7 @@ export const useCalculatedPortfolio = (transactions: Transaction[]): CalculatedP
       totalDeposited,
       lastUpdated: new Date().toISOString()
     }
-  }, [transactions, transactions.length])
+  }, [transactions])
 }
 
 // Helper functions to extract data from names
