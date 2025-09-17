@@ -67,6 +67,7 @@ export interface Transaction {
   fee?: number;
   // Metadata
   note?: string;
+  description?: string;
 }
 
 export interface Operation {
