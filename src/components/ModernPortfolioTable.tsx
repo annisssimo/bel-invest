@@ -2,7 +2,8 @@
 
 import { useState, useMemo } from 'react';
 import { CalculatedSecurity } from '@/types';
-import { formatCurrency, formatPercentage } from '@/utils/calculations';
+import { formatPercentage } from '@/utils/calculations';
+import { formatCurrency } from '@/utils/currency';
 import { convertToUSD } from '@/utils/currency';
 import {
   Search,

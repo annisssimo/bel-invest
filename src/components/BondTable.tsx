@@ -1,7 +1,8 @@
 'use client'
 
 import { Bond } from '@/types'
-import { calculateYearlyIncome, calculateMonthlyIncome, calculateDaysToMaturity, formatCurrency, formatPercentage } from '@/utils/calculations'
+import { calculateYearlyIncome, calculateMonthlyIncome, calculateDaysToMaturity, formatPercentage } from '@/utils/calculations';
+import { formatCurrency } from '@/utils/currency';
 import { Trash2, Edit } from 'lucide-react'
 
 interface BondTableProps {

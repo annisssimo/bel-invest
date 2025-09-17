@@ -3,10 +3,10 @@
 import { Bond } from '@/types';
 import {
   calculatePortfolioStats,
-  formatCurrency,
   formatPercentage,
   getPortfolioByCurrency,
 } from '@/utils/calculations';
+import { formatCurrency } from '@/utils/currency';
 import { TrendingUp, DollarSign, Percent, Award } from 'lucide-react';
 
 interface PortfolioStatsProps {

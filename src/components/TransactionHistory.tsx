@@ -18,7 +18,7 @@ import {
   Calendar,
   Banknote,
 } from 'lucide-react';
-import { formatCurrency } from '@/utils/calculations';
+import { formatCurrency } from '@/utils/currency';
 import DatePicker from './DatePicker';
 
 interface TransactionHistoryProps {

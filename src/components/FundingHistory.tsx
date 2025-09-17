@@ -2,7 +2,7 @@
 
 import { FundingOperation } from '@/types'
 import { Edit2, Trash2, TrendingUp, TrendingDown, Clock } from 'lucide-react'
-import { formatCurrency } from '@/utils/calculations'
+import { formatCurrency } from '@/utils/currency';
 
 interface FundingHistoryProps {
   operations: FundingOperation[]

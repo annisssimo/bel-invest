@@ -1,18 +1,50 @@
+// ===== CORE TYPES =====
 export type Broker = 'finstore' | 'freedom';
 
+export type Currency = 'BYN' | 'USD' | 'EUR' | 'RUB';
+
+export type SecurityType = 'bond' | 'stock' | 'etf';
+
+export type OperationType =
+  | 'buy'
+  | 'sell'
+  | 'coupon'
+  | 'maturity'
+  | 'deposit'
+  | 'credit'
+  | 'debit'
+  | 'dividend';
+
+export type BondRating = 'AAA' | 'AA' | 'A' | 'BBB' | 'BB' | 'B';
+
+// ===== CURRENCY UTILITIES =====
+export interface CurrencyAmount {
+  amount: number;
+  currency: Currency;
+}
+
+export interface CurrencyBalances {
+  BYN: number;
+  USD: number;
+  EUR: number;
+  RUB: number;
+}
+
+// ===== BOND INTERFACE =====
 export interface Bond {
   id: string;
   broker: Broker;
   issuer: string;
   amount: number;
-  currency: 'BYN' | 'USD' | 'EUR' | 'RUB';
+  currency: Currency;
   couponRate: number;
   purchaseDate: string;
   maturityDate: string;
   currentValue?: number;
-  rating?: 'AAA' | 'AA' | 'A' | 'BBB' | 'BB' | 'B' | string;
+  rating?: BondRating | string;
 }
 
+// ===== PORTFOLIO INTERFACES =====
 export interface Portfolio {
   bonds: Bond[];
   totalInvestment: number;
@@ -26,50 +58,38 @@ export interface PortfolioStats {
   averageRate: number;
   bestPerformer: Bond | null;
   worstPerformer: Bond | null;
-  distribution: { [issuer: string]: number };
+  distribution: Record<string, number>;
 }
 
-export type OperationType =
-  | 'buy'
-  | 'sell'
-  | 'coupon'
-  | 'maturity'
-  | 'deposit'
-  | 'credit'
-  | 'debit'
-  | 'dividend';
+// ===== SECURITY INTERFACE =====
+export interface Security {
+  symbol: string;
+  name: string;
+  companyName?: string;
+  type: SecurityType;
+  quantity: number;
+  price: number;
+  currency: Currency;
+  // Additional fields for bonds
+  nominalValue?: number;
+  couponRate?: number;
+  maturityDate?: string;
+}
 
-// Main operation in the system - all money and asset movements
+// ===== TRANSACTION INTERFACE =====
 export interface Transaction {
   id: string;
   broker: Broker;
   type: OperationType;
   date: string;
-  // Assets
-  security?: {
-    symbol: string;
-    name: string;
-    companyName?: string;
-    type: 'bond' | 'stock' | 'etf';
-    quantity: number;
-    price: number;
-    currency: 'BYN' | 'USD' | 'EUR' | 'RUB';
-    // Additional fields for bonds
-    nominalValue?: number;
-    couponRate?: number;
-    maturityDate?: string;
-  };
-  // Money
-  cash?: {
-    amount: number;
-    currency: 'BYN' | 'USD' | 'EUR' | 'RUB';
-  };
+  security?: Security;
+  cash?: CurrencyAmount;
   fee?: number;
-  // Metadata
   note?: string;
   description?: string;
 }
 
+// ===== LEGACY OPERATION INTERFACES =====
 export interface Operation {
   id: string;
   broker: Broker;
@@ -79,7 +99,7 @@ export interface Operation {
   amount: number;
   quantity?: number;
   price?: number;
-  currency: 'BYN' | 'USD' | 'EUR' | 'RUB';
+  currency: Currency;
   fee?: number;
   description?: string;
 }
@@ -90,26 +110,16 @@ export interface FundingOperation {
   type: 'deposit' | 'withdrawal';
   date: string;
   amount: number;
-  currency: 'BYN' | 'USD' | 'EUR' | 'RUB';
+  currency: Currency;
   method?: string;
   description?: string;
 }
 
-// Calculated portfolio based on operations
+// ===== CALCULATED PORTFOLIO INTERFACES =====
 export interface CalculatedPortfolio {
-  balances: {
-    BYN: number;
-    USD: number;
-    EUR: number;
-    RUB: number;
-  };
+  balances: CurrencyBalances;
   securities: CalculatedSecurity[];
-  totalValue: {
-    BYN: number;
-    USD: number;
-    EUR: number;
-    RUB: number;
-  };
+  totalValue: CurrencyBalances;
   totalDeposited: number;
   lastUpdated: string;
 }
@@ -118,10 +128,10 @@ export interface CalculatedSecurity {
   symbol: string;
   name: string;
   companyName?: string;
-  type: 'bond' | 'stock' | 'etf';
+  type: SecurityType;
   quantity: number;
   averagePrice: number;
-  currency: 'BYN' | 'USD' | 'EUR' | 'RUB';
+  currency: Currency;
   currentValue: number;
   totalInvested: number;
   unrealizedPnL: number;
@@ -139,4 +149,36 @@ export interface PortfolioPerformance {
   realizedGains: number;
   unrealizedGains: number;
   totalCoupons: number;
+}
+
+// ===== UTILITY TYPES =====
+export type TransactionFormData = Omit<Transaction, 'id'>;
+
+export type TransactionSortField = 'date' | 'type' | 'amount';
+
+export type TransactionSortOrder = 'asc' | 'desc';
+
+export interface TransactionFilters {
+  type?: OperationType;
+  broker?: Broker;
+  currency?: Currency;
+  dateFrom?: string;
+  dateTo?: string;
+}
+
+// ===== API RESPONSE TYPES =====
+export interface ApiResponse<T> {
+  data: T;
+  success: boolean;
+  message?: string;
+  error?: string;
+}
+
+export interface PaginatedResponse<T> extends ApiResponse<T[]> {
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
 }

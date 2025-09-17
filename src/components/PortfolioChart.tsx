@@ -9,7 +9,7 @@ import {
   Legend,
   Tooltip,
 } from 'recharts';
-import { formatCurrency } from '@/utils/calculations';
+import { formatCurrency } from '@/utils/currency';
 
 interface PortfolioChartProps {
   securities: CalculatedSecurity[];
